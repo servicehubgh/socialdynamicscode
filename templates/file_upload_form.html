@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title>SocialDistance</title>
+    </head>
+<body>
+    <p>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li style="font-size: xx-large">{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </p>
+    {% if filename %}
+	<div>
+		<img src="{{ url_for('display_image', filename=filename) }}">
+	</div>
+    {% endif %}
+    {% if data %}
+	<div>
+        <ul >
+            <li style="font-size: x-large; color: red">Danger
+                {% for danger_info in data["danger"] %}
+                    <ul>
+                        <li style="color: red">{{ danger_info }}</li>
+                    </ul>
+                {% endfor %}
+            </li>
+            <li style="font-size: x-large; color: green">Safeness
+                {% for safe_info in data["safe"] %}
+                    <ul >
+                        <li style="color: green">{{ safe_info }}</li>
+                    </ul>
+                {% endfor %}
+            </li>
+        </ul>
+    </div>
+    {% endif %}
+    <form action = "/upload" method = "post" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <input type = "submit" value="Upload">
+    </form>
+</body>
+</html>

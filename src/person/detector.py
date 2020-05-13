@@ -8,19 +8,19 @@ from settings import CAFFEMODEL_PATH, PROTOTXT_PATH, DETECT_CONFIDENCE, YOLO_COC
 class PersonDetector:
 
     def __init__(self):
-        self.caffe_net = cv2.dnn.readNetFromCaffe(PROTOTXT_PATH, CAFFEMODEL_PATH)
-        # self.yolo_net = cv2.dnn.readNetFromDarknet(YOLO_CONFIG_PATH, YOLO_WEIGHT_PATH)
-        # self.coco_labels = open(YOLO_COCO_PATH).read().strip().split("\n")
-        # self.ln = self.yolo_net.getLayerNames()
-        # self.ln = [self.ln[i[0] - 1] for i in self.yolo_net.getUnconnectedOutLayers()]
-        self.cv_net = cv2.dnn.readNetFromTensorflow(PB_MODEL_PATH, PB_TEXT_PATH)
+        # self.caffe_net = cv2.dnn.readNetFromCaffe(PROTOTXT_PATH, CAFFEMODEL_PATH)
+        self.yolo_net = cv2.dnn.readNetFromDarknet(YOLO_CONFIG_PATH, YOLO_WEIGHT_PATH)
+        self.coco_labels = open(YOLO_COCO_PATH).read().strip().split("\n")
+        self.ln = self.yolo_net.getLayerNames()
+        self.ln = [self.ln[i[0] - 1] for i in self.yolo_net.getUnconnectedOutLayers()]
+        # self.cv_net = cv2.dnn.readNetFromTensorflow(PB_MODEL_PATH, PB_TEXT_PATH)
         if GPU:
-            self.caffe_net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
-            self.caffe_net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
-            self.cv_net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
-            self.cv_net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA_FP16)
-            # self.yolo_net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
-            # self.yolo_net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+            # self.caffe_net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+            # self.caffe_net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+            # self.cv_net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+            # self.cv_net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA_FP16)
+            self.yolo_net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+            self.yolo_net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
     def detect_person_caffe(self, frame):
 
@@ -52,12 +52,9 @@ class PersonDetector:
         person_boxes = []
         person_confidences = []
 
-        resized_frame = cv2.resize(frame, (300, 300))
-        w_resized_ratio = frame.shape[1] / 300
-        h_resized_ratio = frame.shape[0] / 300
-        height, width = resized_frame.shape[:2]
+        height, width = frame.shape[:2]
 
-        blob = cv2.dnn.blobFromImage(resized_frame, 1 / 255.0, (416, 416), swapRB=True, crop=False)
+        blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (416, 416), swapRB=True, crop=False)
         self.yolo_net.setInput(blob)
 
         layer_outputs = self.yolo_net.forward(self.ln)
@@ -74,9 +71,9 @@ class PersonDetector:
                         box = detection[0:4] * np.array([width, height, width, height])
                         (center_x, center_y, p_width, p_height) = box.astype("int")
 
-                        x = int((center_x - (p_width / 2)) * w_resized_ratio)
-                        y = int((center_y - (p_height / 2)) * h_resized_ratio)
-                        person_boxes.append([x, y, int(p_width * w_resized_ratio), int(p_height * h_resized_ratio)])
+                        x = int((center_x - (p_width / 2)))
+                        y = int((center_y - (p_height / 2)))
+                        person_boxes.append([x, y, x + int(p_width), y + int(p_height)])
                         person_confidences.append(float(confidence))
 
         return person_boxes, person_confidences
