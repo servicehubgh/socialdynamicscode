@@ -46,7 +46,6 @@ def display_image(filename):
 
 
 if __name__ == '__main__':
-
     social_estimator = SocialDistanceEstimator()
 
     if WEB_SERVER:
