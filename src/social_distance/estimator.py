@@ -101,7 +101,7 @@ class SocialDistanceEstimator:
 
         print(social_distance_result)
         if width >= 800:
-            fx = width / 800
+            fx = 800 / width
         else:
             fx = 1
 
