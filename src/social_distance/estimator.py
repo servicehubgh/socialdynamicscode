@@ -44,6 +44,7 @@ class SocialDistanceEstimator:
         }
 
         frame = cv2.imread(frame_path)
+        height, width = frame.shape[:2]
         file_name = ntpath.basename(frame_path)
 
         st_time = time.time()
@@ -95,11 +96,16 @@ class SocialDistanceEstimator:
                 else:
                     social_distance_result["safe"].append(text)
                     cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
-                cv2.putText(frame, str(i + 1), (left, max(top - 3, 0)), cv2.FONT_HERSHEY_TRIPLEX, 0.6,
-                            (0, 255, 0), 2)
+                cv2.putText(frame, str(i + 1), (left, max(top - 3, 0)), cv2.FONT_HERSHEY_TRIPLEX, height / 1500,
+                            (0, 255, 0), 3)
 
         print(social_distance_result)
-        cv2.imwrite(os.path.join(UPLOAD_FOLDER, file_name), frame)
+        if width >= 800:
+            fx = width / 800
+        else:
+            fx = 1
+
+        cv2.imwrite(os.path.join(UPLOAD_FOLDER, file_name), cv2.resize(frame, None, fx=fx, fy=fx))
         # cv2.imshow("social distance", frame)
         # cv2.waitKey()
 
