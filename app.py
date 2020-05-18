@@ -12,6 +12,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'the random string'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+social_estimator = SocialDistanceEstimator()
 
 
 @app.route('/')
@@ -52,7 +53,6 @@ def display_image(filename):
 
 
 if __name__ == '__main__':
-    social_estimator = SocialDistanceEstimator()
 
     if WEB_SERVER:
         app.run(debug=True, host=SERVER_HOST, port=SERVER_PORT)
