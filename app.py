@@ -5,6 +5,8 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 from werkzeug.utils import secure_filename
 from src.social_distance.estimator import SocialDistanceEstimator
 from settings import WEB_SERVER, UPLOAD_FOLDER, SERVER_HOST, SERVER_PORT, INPUT_DIR
+from utils.folder_file_manager import log_print
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'the random string'
@@ -19,24 +21,28 @@ def upload():
 
 @app.route('/upload', methods=['POST'])
 def success():
-    if request.method == 'POST':
-        for tmp_path in glob.glob(os.path.join(INPUT_DIR, "*.*")):
-            os.remove(tmp_path)
+    try:
+        if request.method == 'POST':
+            for tmp_path in glob.glob(os.path.join(INPUT_DIR, "*.*")):
+                os.remove(tmp_path)
 
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No image selected for uploading')
-            return redirect(request.url)
-        file_path = os.path.join(INPUT_DIR, secure_filename(file.filename))
-        file.save(file_path)
+            if 'file' not in request.files:
+                flash('No file part')
+                return redirect(request.url)
+            file = request.files['file']
+            if file.filename == '':
+                flash('No image selected for uploading')
+                return redirect(request.url)
+            file_path = os.path.join(INPUT_DIR, secure_filename(file.filename))
+            file.save(file_path)
 
-        filename, result_info = social_estimator.process_one_frame(frame_path=file_path)
+            filename, result_info = social_estimator.process_one_frame(frame_path=file_path)
 
-        flash('Image successfully uploaded and Estimated')
-        return render_template('file_upload_form.html', filename=filename, data=result_info)
+            flash('Image successfully uploaded and Estimated')
+            return render_template('file_upload_form.html', filename=filename, data=result_info)
+    except Exception as e:
+        log_print(info_str=e)
+        return render_template('file_upload_form.html', filename=None, data=e)
 
 
 @app.route('/display/<filename>')
