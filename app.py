@@ -26,6 +26,8 @@ def success():
         if request.method == 'POST':
             for tmp_path in glob.glob(os.path.join(INPUT_DIR, "*.*")):
                 os.remove(tmp_path)
+            for tmp_path in glob.glob(os.path.join(UPLOAD_FOLDER, "*.*")):
+                os.remove(tmp_path)
 
             if 'file' not in request.files:
                 flash('No file part')
