@@ -4,32 +4,28 @@
     </head>
 <body>
     <p>
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-              <li style="font-size: xx-large">{{ message }}</li>
-            {% endfor %}
-            </ul>
-          {% endif %}
-        {% endwith %}
+      {% if messages %}
+          <p style="font-size: xx-large">{{ messages }}</p>
+      {% endif %}
     </p>
+    <img id = "image">
     {% if filename %}
-	<div>
+    <div>
 		<img src="{{ url_for('display_image', filename=filename) }}">
 	</div>
     {% endif %}
     {% if data %}
 	<div>
+        <p style="font-size: x-large">This picture is analyzed in 2D.</p>
         <ul >
-            <li style="font-size: x-large; color: red">Danger
+            <li style="font-size: x-large; color: red">Danger: {{ data["danger"]|length }}
                 {% for danger_info in data["danger"] %}
                     <ul>
                         <li style="color: red">{{ danger_info }}</li>
                     </ul>
                 {% endfor %}
             </li>
-            <li style="font-size: x-large; color: green">Safeness
+            <li style="font-size: x-large; color: green">Safe: {{ data["safe"]|length }}
                 {% for safe_info in data["safe"] %}
                     <ul >
                         <li style="color: green">{{ safe_info }}</li>
@@ -37,11 +33,25 @@
                 {% endfor %}
             </li>
         </ul>
+        <p style="font-size: x-large">Physical Distancing Index: {{ data["safe"]|length / (data["safe"]|length + data["danger"]|length) * 100 }}%</p>
     </div>
     {% endif %}
     <form action = "/upload" method = "post" enctype="multipart/form-data">
-        <input type="file" name="file" />
-        <input type = "submit" value="Upload">
+        <input type="file" name="file" style="font-size: x-large" id="files"/>
+        <input type = "submit" value="Upload" style="font-size: x-large">
     </form>
 </body>
+<script>
+    document.getElementById("files").onchange = function () {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+        // get loaded data and render thumbnail.
+        document.getElementById("image").src = e.target.result;
+    };
+
+    // read the image file as a data URL.
+    reader.readAsDataURL(this.files[0]);
+};
+</script>
 </html>

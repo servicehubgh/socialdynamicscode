@@ -34,18 +34,18 @@ def success():
                 return redirect(request.url)
             file = request.files['file']
             if file.filename == '':
-                flash('No image selected for uploading')
-                return redirect(request.url)
+                message = 'Click on Choose File button to select picture before uploading'
+                return render_template('file_upload_form.html', messages=message, filename=None, data=None)
             file_path = os.path.join(INPUT_DIR, secure_filename(file.filename))
             file.save(file_path)
 
             filename, result_info = social_estimator.process_one_frame(frame_path=file_path)
 
-            flash('Image successfully uploaded and Estimated')
-            return render_template('file_upload_form.html', filename=filename, data=result_info)
+            message = 'Image successfully uploaded and Estimated'
+            return render_template('file_upload_form.html', messages=message, filename=filename, data=result_info)
     except Exception as e:
         log_print(info_str=e)
-        return render_template('file_upload_form.html', filename=None, data=e)
+        return render_template('file_upload_form.html', messages=e, filename=None, data=None)
 
 
 @app.route('/display/<filename>')
