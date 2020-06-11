@@ -1,7 +1,9 @@
 import glob
 import os
+import json
 
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, send_file, send_from_directory
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from src.social_distance.estimator import SocialDistanceEstimator
 from settings import WEB_SERVER, UPLOAD_FOLDER, SERVER_HOST, SERVER_PORT, INPUT_DIR
@@ -9,6 +11,7 @@ from utils.folder_file_manager import log_print
 
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'the random string'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -52,6 +55,18 @@ def success():
 def display_image(filename):
     # print('display_image filename: ' + filename)
     return redirect(url_for('static', filename='uploads/' + filename), code=301)
+
+
+@app.route('/video', methods=['POST'])
+def display_video_stream():
+    frame = request.files['image']
+    frame_path = os.path.join(INPUT_DIR, "video.jpg")
+    frame.save(frame_path)
+    filename, result_info = social_estimator.process_one_frame(frame_path=frame_path)
+    send_frame = open(os.path.join(UPLOAD_FOLDER, filename), 'rb').read()
+    # response = {'image': "send_frame"}
+
+    return send_frame
 
 
 if __name__ == '__main__':
