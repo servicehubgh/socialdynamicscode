@@ -2,3 +2,4 @@ opencv-python==4.2.0.34
 flask~=1.1.2
 numpy~=1.18.4
 Werkzeug~=1.0.1
+flask_cors

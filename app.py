@@ -1,8 +1,7 @@
 import glob
 import os
-import json
 
-from flask import Flask, render_template, request, url_for, flash, redirect, send_file, send_from_directory
+from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from src.social_distance.estimator import SocialDistanceEstimator
