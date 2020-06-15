@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="{{url_for('static', filename = '/js/jquery.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename = '/js/webcam.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename = '/js/capture.js')}}"></script>
+    <title>Capture Images</title>
+</head>
+    <body style="height: 100%; align-items: center; ">
+        <button id="start-button">Start</button>
+        <div style=" width: 100vw; height: 70vh; display: flex; justify-content: center;">
+            <div id="my_camera" style="width: 640px; height: 480px;">
+                <video autoplay="autoplay" playsinline="playsinline" style="width: 640px; height: 480px;"></video>
+            </div>
+        </div>
+        <div id="results">
+        </div>
+    </body>
+</html>

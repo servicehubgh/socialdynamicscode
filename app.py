@@ -19,6 +19,16 @@ social_estimator = SocialDistanceEstimator()
 
 @app.route('/')
 def upload():
+    return render_template("main.html")
+
+
+@app.route('/video_upload')
+def upload_video():
+    return render_template("detail.html")
+
+
+@app.route('/image_upload')
+def upload_image():
     return render_template("file_upload_form.html")
 
 
