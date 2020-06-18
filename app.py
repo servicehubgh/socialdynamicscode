@@ -1,11 +1,12 @@
 import glob
 import os
+import json
 
 from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from src.social_distance.estimator import SocialDistanceEstimator
-from settings import WEB_SERVER, UPLOAD_FOLDER, SERVER_HOST, SERVER_PORT, INPUT_DIR
+from settings import WEB_SERVER, UPLOAD_FOLDER, SERVER_HOST, SERVER_PORT, INPUT_DIR, VIDEO_INPUT_DIR
 from utils.folder_file_manager import log_print
 
 
@@ -24,7 +25,7 @@ def upload():
 
 @app.route('/video_upload')
 def upload_video():
-    return render_template("detail.html")
+    return render_template("video_file_upload.html")
 
 
 @app.route('/image_upload')
@@ -73,9 +74,22 @@ def display_video_stream():
     frame.save(frame_path)
     filename, result_info = social_estimator.process_one_frame(frame_path=frame_path)
     send_frame = open(os.path.join(UPLOAD_FOLDER, filename), 'rb').read()
-    # response = {'image': "send_frame"}
 
     return send_frame
+
+
+@app.route('/record_video', methods=['POST'])
+def save_recorded_video():
+    try:
+        video = request.files['video']
+        file_name = request.form['info']
+        video_path = os.path.join(VIDEO_INPUT_DIR, file_name)
+        video.save(video_path)
+        return json.dumps({'result': "success"})
+
+    except Exception as e:
+        log_print(e)
+        return json.dumps({'result': "fail"})
 
 
 if __name__ == '__main__':

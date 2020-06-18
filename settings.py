@@ -6,6 +6,7 @@ CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 
 MODEL_DIR = os.path.join(CUR_DIR, 'utils', 'model')
 INPUT_DIR = make_directory_if_not_exists(os.path.join(CUR_DIR, 'input'))
+VIDEO_INPUT_DIR = make_directory_if_not_exists(os.path.join(CUR_DIR, 'video_input'))
 UPLOAD_FOLDER = make_directory_if_not_exists(os.path.join(CUR_DIR, 'static', 'uploads'))
 
 CAFFEMODEL_PATH = os.path.join(MODEL_DIR, 'SSD_MobileNet.caffemodel')
