@@ -1,45 +1,50 @@
 <html>
     <head>
-        <title>SocialDistance</title>
+        <title>SocialDistanceService</title>
     </head>
-<body>
-    <p>
-      {% if messages %}
-          <p style="font-size: xx-large">{{ messages }}</p>
-      {% endif %}
-    </p>
-    <img id = "image">
-    {% if filename %}
-    <div>
-		<img src="{{ url_for('display_image', filename=filename) }}">
-	</div>
-    {% endif %}
-    {% if data %}
-	<div>
-        <p style="font-size: x-large">This picture is analyzed in 2D.</p>
-        <ul >
-            <li style="font-size: x-large; color: red">Danger: {{ data["danger"]|length }}
-                {% for danger_info in data["danger"] %}
-                    <ul>
-                        <li style="color: red">{{ danger_info }}</li>
-                    </ul>
-                {% endfor %}
-            </li>
-            <li style="font-size: x-large; color: green">Safe: {{ data["safe"]|length }}
-                {% for safe_info in data["safe"] %}
-                    <ul >
-                        <li style="color: green">{{ safe_info }}</li>
-                    </ul>
-                {% endfor %}
-            </li>
-        </ul>
-        <p style="font-size: x-large">Physical Distancing Index: {{ data["safe"]|length / (data["safe"]|length + data["danger"]|length) * 100 }}%</p>
+<body style="background-image: url({{ url_for('static', filename='bg_image/background.jpg') }}); background-repeat: no-repeat; background-size: cover">
+    <div style="height: 100%; margin: 0 auto -150px;">
+        <p>
+          {% if messages %}
+              <p style="font-size: xx-large">{{ messages }}</p>
+          {% endif %}
+        </p>
+        <img id = "image">
+        {% if filename %}
+        <div>
+            <img src="{{ url_for('display_image', filename=filename) }}">
+        </div>
+        {% endif %}
+        {% if data %}
+        <div>
+            <p style="font-size: x-large">This picture is analyzed in 2D.</p>
+            <ul >
+                <li style="font-size: x-large; color: red">Danger: {{ data["danger"]|length }}
+                    {% for danger_info in data["danger"] %}
+                        <ul>
+                            <li style="color: red">{{ danger_info }}</li>
+                        </ul>
+                    {% endfor %}
+                </li>
+                <li style="font-size: x-large; color: green">Safe: {{ data["safe"]|length }}
+                    {% for safe_info in data["safe"] %}
+                        <ul >
+                            <li style="color: green">{{ safe_info }}</li>
+                        </ul>
+                    {% endfor %}
+                </li>
+            </ul>
+            <p style="font-size: x-large">Physical Distancing Index: {{ data["safe"]|length / (data["safe"]|length + data["danger"]|length) * 100 }}%</p>
+        </div>
+        {% endif %}
+        <form action = "/upload" method = "post" enctype="multipart/form-data">
+            <input type="file" name="file" style="font-size: x-large" id="files"/>
+            <input type = "submit" value="Upload" style="font-size: x-large">
+        </form>
     </div>
-    {% endif %}
-    <form action = "/upload" method = "post" enctype="multipart/form-data">
-        <input type="file" name="file" style="font-size: x-large" id="files"/>
-        <input type = "submit" value="Upload" style="font-size: x-large">
-    </form>
+    <footer class="footer" style="position: relative; margin-top: -150px; height: 150px; clear:both; padding-top:20px;">
+        <a href="https://www.clinicalcomments.com" target="_blank" rel="noopener noreferrer">Go to Clinic...</a>
+    </footer>
 </body>
 <script>
     document.getElementById("files").onchange = function () {
