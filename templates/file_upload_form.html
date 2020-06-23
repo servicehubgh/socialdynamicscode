@@ -1,9 +1,10 @@
 <html>
     <head>
         <title>SocialDistanceService</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
 <body style="background-image: url({{ url_for('static', filename='bg_image/background.jpg') }}); background-repeat: no-repeat; background-size: cover">
-    <div style="height: 100%; margin: 0 auto -150px;">
+    <div style="height: 100%; margin-bottom: -150px; font-size: xx-large; margin-top: 10%">
         <p>
           {% if messages %}
               <p style="font-size: xx-large">{{ messages }}</p>
@@ -42,7 +43,7 @@
             <input type = "submit" value="Upload" style="font-size: x-large">
         </form>
     </div>
-    <footer class="footer" style="position: relative; margin-top: -150px; height: 150px; clear:both; padding-top:20px;">
+    <footer class="footer" style="position: relative; margin-top: -150px; height: 150px; clear:both; padding-top:20px; font-size: xx-large; text-align: right">
         <a href="https://www.clinicalcomments.com" target="_blank" rel="noopener noreferrer">Go to Clinic...</a>
     </footer>
 </body>
